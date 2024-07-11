@@ -391,12 +391,11 @@ sudo chown -R alertmanager:alertmanager /etc/alertmanager
 sudo chown -R alertmanager:alertmanager /var/lib/alertmanager
 
 # copy binaries
-sudo cp alertmanager /usr/local/bin/
-sudo cp amtool /usr/local/bin/
+sudo mv alertmanager /usr/local/bin/
+sudo mv amtool /usr/local/bin/
+sudo mv alertmanager.yml /etc/alertmanager/alertmanager.yml
 
-# set ownership
-sudo chown alertmanager:alertmanager /usr/local/bin/alertmanager
-sudo chown alertmanager:alertmanager /usr/local/bin/amtool
+
 
 # Setup systemd by adding below lines to file /etc/systemd/system/alertmanager.service
 sudo vim /etc/systemd/system/alertmanager.service
@@ -406,7 +405,7 @@ sudo vim /etc/systemd/system/alertmanager.service
 [Unit]
 Description=Prometheus Alertmanager Service
 Wants=network-online.target
-After=network.target
+After=network-online.target
 
 [Service]
 User=alertmanager
@@ -415,7 +414,7 @@ Type=simple
 ExecStart=/usr/local/bin/alertmanager \
     --config.file /etc/alertmanager/alertmanager.yml \
     --storage.path /var/lib/alertmanager/data
-Restart=always
+
 
 [Install]
 WantedBy=multi-user.target
@@ -428,6 +427,11 @@ sudo systemctl start alertmanager
 
 # restart prometheus
 sudo systemctl restart prometheus
+
+OR
+
+promtool check config /etc/prometheus/prometheus.yml
+curl -X POST http://localhost:9090/-/reload
 
 # Add the following lines and substitute with correct values to /etc/alertmanager/alertmanager.yml:
 global:
