@@ -376,7 +376,7 @@ cd alertmanager-${ALERTMANAGER_VERSION}.linux-amd64/
 #./alertmanager --config.file=simple.yml
 
 # create user
-sudo useradd --no-create-home --shell /bin/false alertmanager 
+sudo useradd --system --no-create-home --shell /bin/false alertmanager 
 
 # create directories
 sudo mkdir /etc/alertmanager
